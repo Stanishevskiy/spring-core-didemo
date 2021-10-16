@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="currentFortune"
+          class="io.tolstjak.services.impl.FortuneService">
+    </bean>
+
+    <bean id="currentCoach"
+          class="io.tolstjak.domain.impl.BoxingCoach" >
+        <constructor-arg ref="currentFortune"/>
+    </bean>
+
+    <bean id="nextCoach"
+          class="io.tolstjak.domain.impl.TennisCoach">
+        <property name="fortuneService" ref="currentFortune"/>
+    </bean>
+
+
+    <bean id="randomFortune"
+          class="io.tolstjak.services.impl.RandomFortuneService">
+        <property name="allFortuneVariants">
+            <list>
+                <value>Nothing lucky today</value>
+                <value>Today a sun smile little bit</value>
+                <value>Today a lucky day</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="currentCoach2"
+          class="io.tolstjak.domain.impl.SwimmingCoach">
+        <constructor-arg name="fortune" ref="randomFortune"/>
+        <constructor-arg name="name" value="Swimmer Greatest"/>
+        <constructor-arg name="email" value="swim.gret@mail.ru"/>
+    </bean>
+
+    <context:property-placeholder location="sport.properties"/>
+    <bean id="randomFortune2"
+          class="io.tolstjak.services.impl.RandomFortuneService">
+        <property name="allFortuneVariants" value="${fortune.days}"/>
+    </bean>
+    <bean id="nextCoach2"
+          class="io.tolstjak.domain.impl.TrackCoach">
+        <property name="fortune" ref="randomFortune2"/>
+        <property name="name" value="${coach.name}"/>
+        <property name="email" value="${coach.email}"/>
+    </bean>
+
+</beans>
